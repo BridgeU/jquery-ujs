@@ -61,12 +61,12 @@
 
     // Up-to-date Cross-Site Request Forgery token
     csrfToken: function() {
-     return $('meta[name=csrf-token]').attr('content');
+     return $('meta[name=bu-csrf-token]').attr('content');
     },
 
     // URL param that must contain the CSRF token
     csrfParam: function() {
-     return $('meta[name=csrf-param]').attr('content');
+     return $('meta[name=bu-csrf-param]').attr('content');
     },
 
     // Make sure that every Ajax request sends the CSRF token
