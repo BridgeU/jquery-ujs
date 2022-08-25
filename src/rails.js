@@ -59,25 +59,30 @@
     // Button onClick disable selector with possible reenable after remote submission
     buttonDisableSelector: 'button[data-remote][data-disable-with], button[data-remote][data-disable]',
 
-    // Up-to-date Cross-Site Request Forgery token
-    csrfToken: function() {
+    // Up-to-date Cross-Site Request Forgery token that handles "data-method" on links
+    buCsrfToken: function() {
      return $('meta[name=bu-csrf-token]').attr('content');
     },
 
-    // URL param that must contain the CSRF token
-    csrfParam: function() {
+    // URL param that must contain the CSRF token that handles "data-method" on links
+    buCsrfParam: function() {
      return $('meta[name=bu-csrf-param]').attr('content');
     },
 
-    // Make sure that every Ajax request sends the CSRF token
+    // Up-to-date Cross-Site Request Forgery token
+    csrfToken: function() {
+      return $('meta[name=csrf-token]').attr('content');
+      },
+
+    // Make sure that every Ajax request does not send the custom bu-CSRF token
     CSRFProtection: function(xhr) {
       var token = rails.csrfToken();
       if (token) xhr.setRequestHeader('X-CSRF-Token', token);
     },
 
-    // Make sure that all forms have actual up-to-date tokens (cached forms contain old ones)
+    // Make sure that all forms have actual up-to-date bu csrf tokens (cached forms contain old ones)
     refreshCSRFTokens: function(){
-      $('form input[name="' + rails.csrfParam() + '"]').val(rails.csrfToken());
+      $('form input[name="' + rails.buCsrfParam() + '"]').val(rails.buCsrfToken());
     },
 
     // Triggers an event on an element and returns false if the event result is false
@@ -216,8 +221,8 @@
       var href = rails.href(link),
         method = link.data('method'),
         target = link.attr('target'),
-        csrfToken = rails.csrfToken(),
-        csrfParam = rails.csrfParam(),
+        csrfToken = rails.buCsrfToken(),
+        csrfParam = rails.buCsrfParam(),
         form = $('<form method="post" action="' + href + '"></form>'),
         metadataInput = '<input name="_method" value="' + method + '" type="hidden" />';
 
